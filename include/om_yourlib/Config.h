@@ -1,16 +1,42 @@
+/**
+ * @file Config.h
+ * @brief Configuration structure for YourLib.
+ *
+ * All hardware-specific parameters (pins, interfaces) are injected via this
+ * struct. The library never hardcodes pin values.
+ */
+
 #pragma once
+
 #include <stdint.h>
 
 namespace om_yourlib {
 
+/**
+ * @brief Configuration for YourLib initialization.
+ *
+ * Pass to YourLib::begin() to configure the library. All pin values default
+ * to -1 (disabled). Set only the pins your application uses.
+ *
+ * @note Pin values are board-specific. Define them in your application or
+ *       example code, not in the library.
+ */
 struct Config {
-  // Hardware inputs (do NOT hardcode pins in the library)
-  int led_pin = -1;               // optional, used by example behavior
-  int uart_rx_pin = -1;           // example: if your lib uses UART
+  /// @brief GPIO pin for LED output. Set to -1 to disable LED functionality.
+  /// @note Application-provided. Library does not define pin defaults.
+  int led_pin = -1;
+
+  /// @brief GPIO pin for UART RX. Set to -1 if UART is not used.
+  /// @note Application-provided. Library does not define pin defaults.
+  int uart_rx_pin = -1;
+
+  /// @brief GPIO pin for UART TX. Set to -1 if UART is not used.
+  /// @note Application-provided. Library does not define pin defaults.
   int uart_tx_pin = -1;
 
-  // Behavior
-  uint32_t interval_ms = 1000;    // example periodic tick
+  /// @brief Interval in milliseconds for periodic tick actions.
+  /// @note Must be > 0. Validated in begin().
+  uint32_t interval_ms = 1000;
 };
 
-} // namespace om_yourlib
+}  // namespace om_yourlib

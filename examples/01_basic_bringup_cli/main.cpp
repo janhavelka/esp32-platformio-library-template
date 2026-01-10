@@ -1,60 +1,140 @@
+/**
+ * @file main.cpp
+ * @brief Interactive CLI example for YourLib.
+ *
+ * Demonstrates library lifecycle with serial commands.
+ * Type 'help' for available commands.
+ */
+
 #include <Arduino.h>
-#include "examples/common/Log.h"
+
 #include "examples/common/BoardPins.h"
+#include "examples/common/Log.h"
 #include "om_yourlib/YourLib.h"
 
 static om_yourlib::YourLib g_lib;
 
+/**
+ * @brief Non-blocking line reader from Serial.
+ * @return Complete line (without newline) or empty string if incomplete.
+ */
 static String read_line() {
-  static String s;
+  static String buffer;
   while (Serial.available()) {
-    char c = (char)Serial.read();
-    if (c == '\r') continue;
-    if (c == '\n') { String out = s; s = ""; return out; }
-    s += c;
+    const char c = static_cast<char>(Serial.read());
+    if (c == '\r') {
+      continue;
+    }
+    if (c == '\n') {
+      String result = buffer;
+      buffer = "";
+      return result;
+    }
+    if (buffer.length() < 64) {  // Limit buffer size
+      buffer += c;
+    }
   }
   return "";
 }
 
-static void help() {
-  Serial.println("Commands:");
-  Serial.println("  help");
-  Serial.println("  start <ms>");
-  Serial.println("  stop");
+/**
+ * @brief Print available commands.
+ */
+static void print_help() {
+  Serial.println();
+  Serial.println(F("=== YourLib CLI ==="));
+  Serial.println(F("Commands:"));
+  Serial.println(F("  help          - Show this help"));
+  Serial.println(F("  start [ms]    - Start with interval (default: 1000ms)"));
+  Serial.println(F("  stop          - Stop the library"));
+  Serial.println(F("  status        - Show current state"));
+  Serial.println();
+}
+
+/**
+ * @brief Handle 'start' command.
+ * @param arg Optional interval argument (e.g., "500").
+ */
+static void cmd_start(const String& arg) {
+  if (g_lib.started()) {
+    LOGI("Already running. Use 'stop' first.");
+    return;
+  }
+
+  uint32_t interval = 1000;
+  if (arg.length() > 0) {
+    const long val = arg.toInt();
+    if (val > 0) {
+      interval = static_cast<uint32_t>(val);
+    }
+  }
+
+  om_yourlib::Config cfg;
+  cfg.interval_ms = interval;
+  cfg.led_pin = pins::LED;
+
+  const om_yourlib::Status st = g_lib.begin(cfg);
+  if (!st.ok()) {
+    LOGE("begin() failed: %s (code=%d)", st.msg, static_cast<int>(st.code));
+  } else {
+    LOGI("Started. interval=%lu ms, led_pin=%d",
+         static_cast<unsigned long>(interval), pins::LED);
+  }
+}
+
+/**
+ * @brief Handle 'stop' command.
+ */
+static void cmd_stop() {
+  if (!g_lib.started()) {
+    LOGI("Not running.");
+    return;
+  }
+  g_lib.end();
+  LOGI("Stopped.");
+}
+
+/**
+ * @brief Handle 'status' command.
+ */
+static void cmd_status() {
+  LOGI("Running: %s", g_lib.started() ? "yes" : "no");
+}
+
+/**
+ * @brief Process a single command line.
+ * @param line The command line to process.
+ */
+static void process_command(const String& line) {
+  if (line == "help") {
+    print_help();
+  } else if (line == "start") {
+    cmd_start("");
+  } else if (line.startsWith("start ")) {
+    cmd_start(line.substring(6));
+  } else if (line == "stop") {
+    cmd_stop();
+  } else if (line == "status") {
+    cmd_status();
+  } else {
+    LOGE("Unknown command. Type 'help' for usage.");
+  }
 }
 
 void setup() {
   log_begin(115200);
-  delay(50);
-  help();
+  delay(100);  // Allow USB CDC to initialize
+  print_help();
+  Serial.println(F("Ready. Type a command:"));
 }
 
 void loop() {
-  const uint32_t now = millis();
-  g_lib.tick(now);
+  // Non-blocking tick
+  g_lib.tick(millis());
 
+  // Non-blocking command processing
   const String line = read_line();
-  if (line.length() == 0) return;
-
-  if (line == "help") { help(); return; }
-
-  if (line.startsWith("start ")) {
-    const uint32_t ms = (uint32_t)line.substring(6).toInt();
-    om_yourlib::Config cfg;
-    cfg.interval_ms = (ms == 0) ? 1000 : ms;
-    cfg.led_pin = pins::LED;
-
-    const auto st = g_lib.begin(cfg);
-    if (!st.ok()) LOGE("begin failed: %s", st.msg);
-    else LOGI("started interval=%lu", (unsigned long)cfg.interval_ms);
-    return;
+  if (line.length() > 0) {
+    process_command(line);
   }
-
-  if (line == "stop") {
-    g_lib.end();
-    LOGI("stopped");
-    return;
-  }
-
-  LOGE("unknown; type help");
 }

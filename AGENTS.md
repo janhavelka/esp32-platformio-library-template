@@ -236,24 +236,105 @@ struct Config {
 
 ---
 
-## Versioning
+## Versioning and Release Process
 
-**Single source of truth:** [library.json](library.json) - update version ONLY here.
+### When to Update Version
+
+Follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH):
+
+- **MAJOR** (1.0.0 → 2.0.0): Breaking API changes
+  - Changed function signatures
+  - Removed public methods
+  - Changed Config struct fields (name or type)
+  - Changed enum values or error codes
+
+- **MINOR** (1.0.0 → 1.1.0): New features, backward compatible
+  - New public methods
+  - New Config fields with defaults
+  - New error codes (append only)
+  - New optional features
+
+- **PATCH** (1.0.0 → 1.0.1): Bug fixes, no API changes
+  - Fixed bugs
+  - Performance improvements
+  - Documentation updates
+  - Internal refactoring
+
+### Release Checklist (MANDATORY)
+
+**Before ANY version change, complete ALL steps:**
+
+#### 1. Update [library.json](library.json)
+```json
+{
+  "version": "X.Y.Z"  // ← Change this first
+}
+```
+
+#### 2. Update [CHANGELOG.md](CHANGELOG.md)
+Add new version section at the top:
+```markdown
+## [X.Y.Z] - YYYY-MM-DD
+
+### Added
+- List new features
+
+### Changed
+- List API changes (breaking or non-breaking)
+
+### Fixed
+- List bug fixes
+
+### Removed
+- List removed features (breaking)
+```
+
+**Ask:** "What changed in this release? List all Added/Changed/Fixed/Removed items."
+
+#### 3. Update [README.md](README.md) (if needed)
+Check if any of these sections need updates:
+- **API table** - new methods? changed signatures?
+- **Config struct** - new fields? changed defaults?
+- **Examples** - does example code reflect new API?
+- **Error codes** - new Err enum values?
+- **Pin mappings** - changed default pins?
+
+**Ask:** "Do any README sections need updates based on the changes?"
+
+#### 4. Update [SECURITY.md](SECURITY.md) (if needed)
+- Update "Supported Versions" table if dropping old version support
+- Update contact information if changed
+
+**Ask:** "Are we dropping support for any old versions? Has security contact changed?"
+
+#### 5. Review [AGENTS.md](AGENTS.md) (this file)
+- Add new device patterns if implementing new hardware support
+- Update architecture rules if design patterns changed
+- Add new examples to naming conventions if needed
+
+**Ask:** "Do any coding guidelines need updates based on new patterns introduced?"
+
+#### 6. Commit and Tag
+```bash
+git add library.json CHANGELOG.md README.md
+git commit -m "Release vX.Y.Z"
+git tag vX.Y.Z
+git push origin main --tags
+```
+
+### Version.h Auto-Generation
+
+**Single source of truth:** [library.json](library.json)
 
 **Automatic generation:** [scripts/generate_version.py](scripts/generate_version.py) creates `include/YourLibrary/Version.h` before each build.
 
-**Process:**
-1. Update version in `library.json` (e.g., `"version": "1.2.3"`)
-2. Build runs automatically → `Version.h` generated
-3. Examples can print version: `Serial.println(YourLibrary::VERSION);`
-
-**Version.h provides:**
-- `VERSION_MAJOR`, `VERSION_MINOR`, `VERSION_PATCH` (uint16_t) - semantic version components
-- `VERSION` (string) - version string (e.g., "1.2.3")
-- `VERSION_CODE` (uint32_t) - encoded for numeric comparison (e.g., 10203 for 1.2.3)
-- `BUILD_DATE`, `BUILD_TIME`, `BUILD_TIMESTAMP` (strings) - when firmware was compiled
-- `GIT_COMMIT` (string) - short git hash (e.g., "a1b2c3d")
-- `GIT_STATUS` (string) - "clean" or "dirty" (uncommitted changes)
+**Generated constants:**
+- `VERSION_MAJOR`, `VERSION_MINOR`, `VERSION_PATCH` (uint16_t)
+- `VERSION` (string) - e.g., "1.2.3"
+- `VERSION_CODE` (uint32_t) - encoded for comparison (e.g., 10203)
+- `BUILD_DATE`, `BUILD_TIME`, `BUILD_TIMESTAMP` (strings)
+- `GIT_COMMIT` (string) - short hash (e.g., "a1b2c3d")
+- `GIT_STATUS` (string) - "clean" or "dirty"
 - `VERSION_FULL` (string) - complete version with build info
 
 **Never edit Version.h manually** - it's regenerated on every build.

@@ -1,0 +1,30 @@
+{
+  "name": "esp32-platformio-library-template",
+  "version": "0.1.0",
+  "description": "Robust ESP32 Arduino + PlatformIO single-library template with begin/end/tick and Status errors.",
+  "keywords": [
+    "esp32",
+    "arduino",
+    "platformio",
+    "embedded",
+    "library-template"
+  ],
+  "authors": [
+    {
+      "name": "Your Name"
+    }
+  ],
+  "frameworks": [
+    "arduino"
+  ],
+  "platforms": [
+    "espressif32"
+  ],
+  "headers": [
+    "YourLib.h"
+  ],
+  "build": {
+    "includeDir": "include",
+    "srcDir": "src"
+  }
+}

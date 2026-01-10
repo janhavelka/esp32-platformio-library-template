@@ -25,6 +25,28 @@ pio run -e ex_cli_s3 -t upload && pio device monitor -e ex_cli_s3
 | ESP32-S3-MINI-1U-N4R2    | `ex_cli_s3`       | PSRAM enabled            |
 | ESP32-S2-MINI-2-N4       | `ex_cli_s2`       | No PSRAM                 |
 
+## Versioning
+
+The library version is defined in [library.json](library.json). A pre-build script automatically generates `include/YourLibrary/Version.h` with version constants.
+
+**Print version in your code:**
+```cpp
+#include "YourLibrary/Version.h"
+
+Serial.println(YourLibrary::VERSION);           // "0.1.0"
+Serial.println(YourLibrary::VERSION_FULL);      // "0.1.0 (a1b2c3d, 2026-01-10 15:30:00)"
+Serial.println(YourLibrary::BUILD_TIMESTAMP);   // "2026-01-10 15:30:00"
+Serial.println(YourLibrary::GIT_COMMIT);        // "a1b2c3d"
+```
+
+**Available constants:**
+- `VERSION`, `VERSION_MAJOR`, `VERSION_MINOR`, `VERSION_PATCH`, `VERSION_CODE`
+- `BUILD_DATE`, `BUILD_TIME`, `BUILD_TIMESTAMP`
+- `GIT_COMMIT`, `GIT_STATUS` (clean/dirty)
+- `VERSION_FULL` (version + build info)
+
+**Update version:** Edit `library.json` only. `Version.h` is auto-generated on every build.
+
 ## API
 
 The library follows a **begin/tick/end** lifecycle:

@@ -236,6 +236,30 @@ struct Config {
 
 ---
 
+## Versioning
+
+**Single source of truth:** [library.json](library.json) - update version ONLY here.
+
+**Automatic generation:** [scripts/generate_version.py](scripts/generate_version.py) creates `include/YourLibrary/Version.h` before each build.
+
+**Process:**
+1. Update version in `library.json` (e.g., `"version": "1.2.3"`)
+2. Build runs automatically → `Version.h` generated
+3. Examples can print version: `Serial.println(YourLibrary::VERSION);`
+
+**Version.h provides:**
+- `VERSION_MAJOR`, `VERSION_MINOR`, `VERSION_PATCH` (uint16_t) - semantic version components
+- `VERSION` (string) - version string (e.g., "1.2.3")
+- `VERSION_CODE` (uint32_t) - encoded for numeric comparison (e.g., 10203 for 1.2.3)
+- `BUILD_DATE`, `BUILD_TIME`, `BUILD_TIMESTAMP` (strings) - when firmware was compiled
+- `GIT_COMMIT` (string) - short git hash (e.g., "a1b2c3d")
+- `GIT_STATUS` (string) - "clean" or "dirty" (uncommitted changes)
+- `VERSION_FULL` (string) - complete version with build info
+
+**Never edit Version.h manually** - it's regenerated on every build.
+
+---
+
 ## Naming Conventions (Mandatory)
 
 Arduino/PlatformIO/ESP-IDF style:

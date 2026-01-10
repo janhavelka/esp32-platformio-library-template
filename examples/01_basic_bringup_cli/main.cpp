@@ -10,6 +10,7 @@
 
 #include "examples/common/BoardPins.h"
 #include "examples/common/Log.h"
+#include "YourLibrary/Version.h"
 #include "YourLibrary/YourLib.h"
 
 static YourLibrary::YourLib g_lib;
@@ -43,6 +44,15 @@ static String read_line() {
 static void print_help() {
   Serial.println();
   Serial.println(F("=== YourLib CLI ==="));
+  Serial.print(F("Version: "));
+  Serial.println(YourLibrary::VERSION);
+  Serial.print(F("Built:   "));
+  Serial.println(YourLibrary::BUILD_TIMESTAMP);
+  Serial.print(F("Commit:  "));
+  Serial.print(YourLibrary::GIT_COMMIT);
+  Serial.print(F(" ("));
+  Serial.print(YourLibrary::GIT_STATUS);
+  Serial.println(F(")"));
   Serial.println(F("Commands:"));
   Serial.println(F("  help          - Show this help"));
   Serial.println(F("  start [ms]    - Start with interval (default: 1000ms)"));

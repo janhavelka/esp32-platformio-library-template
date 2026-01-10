@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-namespace om_yourlib {
+namespace YourLibrary {
 
 /**
  * @brief Configuration for YourLib initialization.
@@ -39,4 +39,4 @@ struct Config {
   uint32_t interval_ms = 1000;
 };
 
-}  // namespace om_yourlib
+}  // namespace YourLibrary

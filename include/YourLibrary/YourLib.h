@@ -10,20 +10,20 @@
 
 #include <stdint.h>
 
-#include "om_yourlib/Config.h"
-#include "om_yourlib/Status.h"
+#include "YourLibrary/Config.h"
+#include "YourLibrary/Status.h"
 
-namespace om_yourlib {
+namespace YourLibrary {
 
 /**
  * @brief Main library class implementing begin/tick/end lifecycle.
  *
  * Usage:
  * @code
- * om_yourlib::YourLib lib;
+ * YourLibrary::YourLib lib;
  *
  * void setup() {
- *   om_yourlib::Config cfg;
+ *   YourLibrary::Config cfg;
  *   cfg.led_pin = 48;
  *   cfg.interval_ms = 1000;
  *   auto st = lib.begin(cfg);
@@ -88,4 +88,4 @@ class YourLib {
   uint32_t next_ms_ = 0;
 };
 
-}  // namespace om_yourlib
+}  // namespace YourLibrary

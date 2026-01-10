@@ -10,9 +10,9 @@
 
 #include "examples/common/BoardPins.h"
 #include "examples/common/Log.h"
-#include "om_yourlib/YourLib.h"
+#include "YourLibrary/YourLib.h"
 
-static om_yourlib::YourLib g_lib;
+static YourLibrary::YourLib g_lib;
 
 /**
  * @brief Non-blocking line reader from Serial.
@@ -69,11 +69,11 @@ static void cmd_start(const String& arg) {
     }
   }
 
-  om_yourlib::Config cfg;
+  YourLibrary::Config cfg;
   cfg.interval_ms = interval;
   cfg.led_pin = pins::LED;
 
-  const om_yourlib::Status st = g_lib.begin(cfg);
+  const YourLibrary::Status st = g_lib.begin(cfg);
   if (!st.ok()) {
     LOGE("begin() failed: %s (code=%d)", st.msg, static_cast<int>(st.code));
   } else {

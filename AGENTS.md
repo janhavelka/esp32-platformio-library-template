@@ -191,7 +191,7 @@ struct Config {
 - Library APIs return `Status` struct:
   ```cpp
   struct Status {
-    Err code;           // Category (Ok, InvalidArg, Timeout, ...)
+    Err code;           // Category (OK, INVALID_CONFIG, TIMEOUT, ...)
     int32_t detail;     // Vendor/third-party error code
     const char* msg;    // STATIC STRING ONLY (never heap-allocated)
   };
@@ -203,7 +203,7 @@ struct Config {
 ### Error Propagation
 - Errors must be checkable: `if (!status.ok()) { /* handle */ }`
 - Log errors in examples, not in library code
-- Document error conditions in Doxygen (`@return Status::InvalidArg if ...`)
+- Document error conditions in Doxygen (`@return INVALID_CONFIG if ...`)
 
 ---
 
@@ -231,7 +231,7 @@ struct Config {
 - All pins default to -1 (disabled)
 - All timeouts in milliseconds (uint32_t)
 - Boolean flags for optional features
-- Validate in `begin()`, return `Status::InvalidArg` on error
+- Validate in `begin()`, return `INVALID_CONFIG` on error
 - Document valid ranges in Doxygen
 
 ---
@@ -305,7 +305,7 @@ int pin_sda = -1;
 /**
  * @brief Initialize hardware with given config.
  * @param cfg Pin and timing parameters.
- * @return Ok on success, InvalidArg if cfg.timeout_ms == 0.
+ * @return Ok on success, INVALID_CONFIG if cfg.timeout_ms == 0.
  * @note Allocates buffers. Call end() to release.
  */
 Status begin(const Config& cfg);

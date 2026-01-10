@@ -15,19 +15,19 @@
 #include <Arduino.h>
 
 #include "examples/common/BoardPins.h"
-#include "om_yourlib/YourLib.h"
+#include "YourLibrary/YourLib.h"
 
-static om_yourlib::YourLib g_lib;
+static YourLibrary::YourLib g_lib;
 static bool g_initialized = false;
 
 void setup() {
   // Configure the library
-  om_yourlib::Config cfg;
+  YourLibrary::Config cfg;
   cfg.led_pin = pins::LED;
   cfg.interval_ms = 500;  // 500ms blink
 
   // Initialize - check status in real applications
-  const om_yourlib::Status st = g_lib.begin(cfg);
+  const YourLibrary::Status st = g_lib.begin(cfg);
   g_initialized = st.ok();
 }
 

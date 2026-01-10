@@ -30,16 +30,16 @@ pio run -e ex_cli_s3 -t upload && pio device monitor -e ex_cli_s3
 The library follows a **begin/tick/end** lifecycle:
 
 ```cpp
-#include "om_yourlib/YourLib.h"
+#include "YourLibrary/YourLib.h"
 
-om_yourlib::YourLib lib;
+YourLibrary::YourLib lib;
 
 void setup() {
-  om_yourlib::Config cfg;
+  YourLibrary::Config cfg;
   cfg.led_pin = 48;
   cfg.interval_ms = 1000;
 
-  om_yourlib::Status st = lib.begin(cfg);
+  YourLibrary::Status st = lib.begin(cfg);
   if (!st.ok()) {
     // Handle error: st.code, st.msg, st.detail
   }
@@ -77,7 +77,7 @@ struct Config {
 };
 ```
 
-See [include/om_yourlib/Config.h](include/om_yourlib/Config.h) for full definition.
+See [include/YourLibrary/Config.h](include/YourLibrary/Config.h) for full definition.
 
 ### Pin Mapping
 
@@ -102,7 +102,7 @@ All fallible operations return `Status`:
 
 ```cpp
 struct Status {
-  Err code;           // Error category (Ok, InvalidArg, Timeout, etc.)
+  Err code;           // Error category (OK, INVALID_CONFIG, TIMEOUT, etc.)
   int32_t detail;     // Vendor/library-specific error code
   const char* msg;    // Human-readable message (STATIC STRING ONLY)
 };
@@ -112,17 +112,18 @@ struct Status {
 
 ### Error Codes
 
-| Code          | Meaning                              |
-| ------------- | ------------------------------------ |
-| `Ok`          | Success                              |
-| `InvalidArg`  | Invalid configuration parameter      |
-| `Timeout`     | Operation timed out                  |
-| `Busy`        | Resource is busy                     |
-| `Io`          | I/O error                            |
-| `NotReady`    | Not initialized or not ready         |
-| `NoMem`       | Memory allocation failed             |
-| `ThirdParty`  | Error from wrapped third-party code  |
-| `Internal`    | Internal logic error                 |
+| Code                  | Meaning                                    |
+| --------------------- | ------------------------------------------ |
+| `OK`                  | Success                                    |
+| `INVALID_CONFIG`      | Invalid configuration parameter            |
+| `TIMEOUT`             | Operation timed out                        |
+| `RESOURCE_BUSY`       | Resource is busy                           |
+| `COMM_FAILURE`        | Communication or I/O error                 |
+| `NOT_INITIALIZED`     | Not initialized or not ready               |
+| `OUT_OF_MEMORY`       | Memory allocation failed                   |
+| `HARDWARE_FAULT`      | Hardware peripheral error                  |
+| `EXTERNAL_LIB_ERROR`  | Error from wrapped third-party code        |
+| `INTERNAL_ERROR`      | Internal logic error                       |
 
 ## Threading & Timing Model
 
@@ -181,7 +182,7 @@ This project follows [Semantic Versioning 2.0.0](https://semver.org/):
 ## Project Structure
 
 ```
-├── include/om_yourlib/   # Public headers (library API)
+├── include/YourLibrary/   # Public headers (library API)
 │   ├── Config.h          # Configuration struct
 │   ├── Status.h          # Error types
 │   └── YourLib.h         # Main library class

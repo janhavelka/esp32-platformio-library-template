@@ -3,16 +3,16 @@
  * @brief Implementation of YourLib.
  */
 
-#include "om_yourlib/YourLib.h"
+#include "YourLibrary/YourLib.h"
 
 #include <Arduino.h>
 
-namespace om_yourlib {
+namespace YourLibrary {
 
 Status YourLib::begin(const Config& cfg) {
   // Validate configuration
   if (cfg.interval_ms == 0) {
-    return {Err::InvalidArg, 0, "interval_ms must be > 0"};
+    return {Err::INVALID_CONFIG, 0, "interval_ms must be > 0"};
   }
 
   cfg_ = cfg;
@@ -60,4 +60,4 @@ void YourLib::tick(uint32_t now_ms) {
   }
 }
 
-}  // namespace om_yourlib
+}  // namespace YourLibrary

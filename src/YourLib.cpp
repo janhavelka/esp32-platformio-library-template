@@ -9,54 +9,57 @@
 
 namespace YourLibrary {
 
-Status YourLib::begin(const Config& cfg) {
+Status YourLib::begin(const Config& config) {
   // Validate configuration
-  if (cfg.interval_ms == 0) {
-    return {Err::INVALID_CONFIG, 0, "interval_ms must be > 0"};
+  if (config.intervalMs == 0) {
+    return {Err::INVALID_CONFIG, 0, "intervalMs must be > 0"};
   }
 
-  cfg_ = cfg;
-  started_ = true;
-  next_ms_ = 0;
+  _config = config;
+  _initialized = true;
+  _nextMs = 0;
+  _tickCount = 0;
+  _lastTickMs = 0;
 
   // Configure LED pin if provided
-  if (cfg_.led_pin >= 0) {
-    pinMode(static_cast<uint8_t>(cfg_.led_pin), OUTPUT);
-    digitalWrite(static_cast<uint8_t>(cfg_.led_pin), LOW);
+  if (_config.ledPin >= 0) {
+    pinMode(static_cast<uint8_t>(_config.ledPin), OUTPUT);
+    digitalWrite(static_cast<uint8_t>(_config.ledPin), LOW);
   }
 
   return Ok();
 }
 
 void YourLib::end() {
-  if (!started_) {
+  if (!_initialized) {
     return;
   }
 
-  started_ = false;
+  _initialized = false;
 
   // Turn off LED if configured
-  if (cfg_.led_pin >= 0) {
-    digitalWrite(static_cast<uint8_t>(cfg_.led_pin), LOW);
+  if (_config.ledPin >= 0) {
+    digitalWrite(static_cast<uint8_t>(_config.ledPin), LOW);
   }
 }
 
 void YourLib::tick(uint32_t now_ms) {
-  if (!started_) {
+  if (!_initialized) {
     return;
   }
 
-  if (now_ms < next_ms_) {
-    return;
-  }
+  // Wrap-safe deadline check using signed delta
+  if (static_cast<int32_t>(now_ms - _nextMs) >= 0) {
+    _nextMs = now_ms + _config.intervalMs;
+    _tickCount++;
+    _lastTickMs = now_ms;
 
-  next_ms_ = now_ms + cfg_.interval_ms;
-
-  // Example action: toggle LED if configured
-  if (cfg_.led_pin >= 0) {
-    const uint8_t pin = static_cast<uint8_t>(cfg_.led_pin);
-    const int current = digitalRead(pin);
-    digitalWrite(pin, current ? LOW : HIGH);
+    // Example action: toggle LED if configured
+    if (_config.ledPin >= 0) {
+      const uint8_t pin = static_cast<uint8_t>(_config.ledPin);
+      const int current = digitalRead(pin);
+      digitalWrite(pin, current ? LOW : HIGH);
+    }
   }
 }
 

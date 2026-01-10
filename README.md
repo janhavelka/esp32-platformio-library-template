@@ -36,9 +36,8 @@ YourLibrary::YourLib lib;
 
 void setup() {
   YourLibrary::Config cfg;
-  cfg.led_pin = 48;
-  cfg.interval_ms = 1000;
-
+cfg.ledPin = 48;
+cfg.intervalMs = 1000;
   YourLibrary::Status st = lib.begin(cfg);
   if (!st.ok()) {
     // Handle error: st.code, st.msg, st.detail
@@ -57,12 +56,14 @@ void shutdown() {
 
 ### Core Methods
 
-| Method                          | Description                              |
-| ------------------------------- | ---------------------------------------- |
-| `Status begin(const Config&)`   | Initialize with configuration            |
-| `void tick(uint32_t now_ms)`    | Cooperative update, call from `loop()`   |
-| `void end()`                    | Stop and release resources               |
-| `bool started() const`          | Check if library is active               |
+| Method                            | Description                              |
+| --------------------------------- | ---------------------------------------- |
+| `Status begin(const Config&)`     | Initialize with configuration            |
+| `void tick(uint32_t now_ms)`      | Cooperative update, call from `loop()`   |
+| `void end()`                      | Stop and release resources               |
+| `bool isInitialized() const`      | Check if library is initialized          |
+| `const Config& getConfig() const` | Get current configuration                |
+| `uint32_t getNextTickMs() const`  | Get next scheduled tick time             |
 
 ## Config
 
@@ -70,10 +71,10 @@ Configuration is injected via `Config` struct. The library **never hardcodes pin
 
 ```cpp
 struct Config {
-  int led_pin = -1;           // GPIO for LED (-1 = disabled)
-  int uart_rx_pin = -1;       // Example: UART RX pin
-  int uart_tx_pin = -1;       // Example: UART TX pin
-  uint32_t interval_ms = 1000; // Periodic tick interval
+  int ledPin = -1;           // GPIO for LED (-1 = disabled)
+  int uartRxPin = -1;        // Example: UART RX pin
+  int uartTxPin = -1;        // Example: UART TX pin
+  uint32_t intervalMs = 1000; // Periodic tick interval
 };
 ```
 

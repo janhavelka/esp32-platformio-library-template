@@ -56,7 +56,7 @@ static void print_help() {
  * @param arg Optional interval argument (e.g., "500").
  */
 static void cmd_start(const String& arg) {
-  if (g_lib.started()) {
+  if (g_lib.isInitialized()) {
     LOGI("Already running. Use 'stop' first.");
     return;
   }
@@ -69,11 +69,11 @@ static void cmd_start(const String& arg) {
     }
   }
 
-  YourLibrary::Config cfg;
-  cfg.interval_ms = interval;
-  cfg.led_pin = pins::LED;
+  YourLibrary::Config config;
+  config.intervalMs = interval;
+  config.ledPin = pins::LED;
 
-  const YourLibrary::Status st = g_lib.begin(cfg);
+  const YourLibrary::Status st = g_lib.begin(config);
   if (!st.ok()) {
     LOGE("begin() failed: %s (code=%d)", st.msg, static_cast<int>(st.code));
   } else {
@@ -86,7 +86,7 @@ static void cmd_start(const String& arg) {
  * @brief Handle 'stop' command.
  */
 static void cmd_stop() {
-  if (!g_lib.started()) {
+  if (!g_lib.isInitialized()) {
     LOGI("Not running.");
     return;
   }
@@ -98,7 +98,7 @@ static void cmd_stop() {
  * @brief Handle 'status' command.
  */
 static void cmd_status() {
-  LOGI("Running: %s", g_lib.started() ? "yes" : "no");
+  LOGI("Running: %s", g_lib.isInitialized() ? "yes" : "no");
 }
 
 /**

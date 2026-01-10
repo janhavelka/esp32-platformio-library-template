@@ -57,7 +57,7 @@ AGENTS.md           - This file
 
 All libraries MUST expose:
 ```cpp
-Status begin(const Config& cfg);  // Initialize
+Status begin(const Config& config);  // Initialize
 void tick(uint32_t now_ms);       // Cooperative update (non-blocking)
 void end();                        // Cleanup
 ```
@@ -236,6 +236,21 @@ struct Config {
 
 ---
 
+## Naming Conventions (Mandatory)
+
+Arduino/PlatformIO/ESP-IDF style:
+
+| Item                | Convention   | Example                   |
+| ------------------- | ------------ | ------------------------- |
+| Member variables    | `_camelCase` | `_config`, `_initialized` |
+| Methods/Functions   | `camelCase`  | `isReady()`, `getData()`  |
+| Constants           | `CAPS_CASE`  | `LED_PIN`, `MAX_RETRIES`  |
+| Enum values         | `CAPS_CASE`  | `OK`, `TIMEOUT`           |
+| Local vars/params   | `camelCase`  | `startTime`, `timeoutMs`  |
+| Config fields       | `camelCase`  | `ledPin`, `timeoutMs`     |
+
+---
+
 ## Macros and Constants
 
 **Forbidden:** Macros for constants
@@ -304,11 +319,11 @@ int pin_sda = -1;
 
 /**
  * @brief Initialize hardware with given config.
- * @param cfg Pin and timing parameters.
- * @return Ok on success, INVALID_CONFIG if cfg.timeout_ms == 0.
+ * @param config Pin and timing parameters.
+ * @return Ok on success, INVALID_CONFIG if config.timeout_ms == 0.
  * @note Allocates buffers. Call end() to release.
  */
-Status begin(const Config& cfg);
+Status begin(const Config& config);
 ```
 
 **Keep it dense:** State what matters (constraints, units, side effects). Omit obvious explanations.

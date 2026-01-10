@@ -22,12 +22,12 @@ static bool g_initialized = false;
 
 void setup() {
   // Configure the library
-  YourLibrary::Config cfg;
-  cfg.led_pin = pins::LED;
-  cfg.interval_ms = 500;  // 500ms blink
+  YourLibrary::Config config;
+  config.ledPin = pins::LED;
+  config.intervalMs = 500;  // 500ms blink
 
   // Initialize - check status in real applications
-  const YourLibrary::Status st = g_lib.begin(cfg);
+  const YourLibrary::Status st = g_lib.begin(config);
   g_initialized = st.ok();
 }
 

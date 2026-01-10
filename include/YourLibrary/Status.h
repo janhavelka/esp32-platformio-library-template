@@ -43,7 +43,7 @@ enum class Err : uint16_t {
  *
  * Example:
  * @code
- * Status st = lib.begin(cfg);
+ * Status st = lib.begin(config);
  * if (!st.ok()) {
  *   Serial.printf("Error: %s (code=%d, detail=%ld)\n",
  *                 st.msg, (int)st.code, (long)st.detail);

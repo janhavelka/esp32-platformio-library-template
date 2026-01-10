@@ -24,19 +24,19 @@ namespace YourLibrary {
 struct Config {
   /// @brief GPIO pin for LED output. Set to -1 to disable LED functionality.
   /// @note Application-provided. Library does not define pin defaults.
-  int led_pin = -1;
+  int ledPin = -1;
 
   /// @brief GPIO pin for UART RX. Set to -1 if UART is not used.
   /// @note Application-provided. Library does not define pin defaults.
-  int uart_rx_pin = -1;
+  int uartRxPin = -1;
 
   /// @brief GPIO pin for UART TX. Set to -1 if UART is not used.
   /// @note Application-provided. Library does not define pin defaults.
-  int uart_tx_pin = -1;
+  int uartTxPin = -1;
 
   /// @brief Interval in milliseconds for periodic tick actions.
   /// @note Must be > 0. Validated in begin().
-  uint32_t interval_ms = 1000;
+  uint32_t intervalMs = 1000;
 };
 
 }  // namespace YourLibrary

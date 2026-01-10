@@ -56,6 +56,16 @@ struct Status {
   const char* msg = "";     ///< Human-readable message (STATIC STRING ONLY)
 
   /**
+   * @brief Default constructor - creates OK status.
+   */
+  constexpr Status() : code(Err::OK), detail(0), msg("") {}
+
+  /**
+   * @brief Constructor with all fields.
+   */
+  constexpr Status(Err c, int32_t d, const char* m) : code(c), detail(d), msg(m) {}
+
+  /**
    * @brief Check if operation succeeded.
    * @return true if code == Err::OK
    */
@@ -66,6 +76,6 @@ struct Status {
  * @brief Create a success Status.
  * @return Status with Err::OK
  */
-constexpr Status Ok() { return {Err::OK, 0, ""}; }
+constexpr Status Ok() { return Status(Err::OK, 0, ""); }
 
 }  // namespace YourLibrary

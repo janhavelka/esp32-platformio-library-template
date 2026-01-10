@@ -12,7 +12,7 @@ namespace YourLibrary {
 Status YourLib::begin(const Config& config) {
   // Validate configuration
   if (config.intervalMs == 0) {
-    return {Err::INVALID_CONFIG, 0, "intervalMs must be > 0"};
+    return Status(Err::INVALID_CONFIG, 0, "intervalMs must be > 0");
   }
 
   _config = config;

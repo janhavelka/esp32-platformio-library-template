@@ -43,8 +43,8 @@ static constexpr int SPI_SCK = 12;
 /// Override for your hardware.
 static constexpr int SPI_MISO = 13;
 
-/// @brief Onboard LED pin. Example default: GPIO 48 (ESP32-S3), GPIO 18 (ESP32-S2).
-/// Override for your hardware.
+/// @brief LED pin. Example default for ESP32-S3 (RGB LED on GPIO48).
+/// Override for your hardware. Set to -1 to disable.
 static constexpr int LED = 48;
 
 }  // namespace pins
